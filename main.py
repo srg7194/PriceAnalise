@@ -53,6 +53,7 @@
 #     if count_rows:
 #         if count_rows < 0:
 #             count_rows = abs(count_rows)
+
 #             print(df.tail(count_rows).to_markdown(tablefmt="fancy_grid"))
 #         else:
 #             print(df.head(count_rows).to_markdown(tablefmt="fancy_grid"))
