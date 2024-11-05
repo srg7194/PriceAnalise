@@ -14,4 +14,3 @@ if __name__ == '__main__':
 
     for i, s in config.iterrows():
         print(s['Активно'] == True)
-
