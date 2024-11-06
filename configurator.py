@@ -1,3 +1,4 @@
+from pprint import pprint
 from addition.api import *
 from addition.other import *
 
@@ -6,12 +7,11 @@ class ConfiguratorAnaliser:
     def __init__(self, creds_path, local_start=False):
         self.creds_path = creds_path
         self.save_path = 'files/config/config.xlsx'
-        self.sheet_names = ['Подключения', 'Таймфреймы', 'Эмулятор']
         self.creds = json_to_dict(self.creds_path)
 
         if not local_start:
             self.save_config()
-        self.default_config = read_excel_file(self.save_path, self.sheet_names)
+        self.default_config = read_excel_file(self.save_path)
 
     def save_config(self):
         service_account_path = self.creds['config']['path']
@@ -22,21 +22,26 @@ class ConfiguratorAnaliser:
         init.download_file(real_file_id=fileid, file_path=self.save_path)
         return self.save_path
 
-    def prepare_connection(self):
-        return False
+    def get_data_loader(self):
+        # Фильтр
+        connection = self.default_config['Подключения']
+        timeframe = self.default_config['Таймфреймы']
+        enable_connection = connection.loc[connection['Активно'] == True]
 
-    def prepare_timeframe(self):
-        return False
+        for i, s in enable_connection.iterrows():
+            temp = dict(s)
+            for el in ['Активно', 'id']:
+                temp.pop(el)
+            temp.update({'timeframe': (timeframe.loc[timeframe['Id подключения'] == s['id']]).to_dict('records')})
 
-    def prepare_emulator(self):
+            pprint(temp)
+
         return False
 
     def get_config(self):
         config = {
             'credential': self.creds,
-            'connection': self.prepare_connection(),
-            'timeframe': self.prepare_timeframe(),
-            'emulator': self.prepare_emulator()
+            'data_loader': self.get_data_loader()
         }
         return config
 
