@@ -3,7 +3,7 @@ import pprint
 
 # Параметры для запуска
 creds_path = 'files/secret/creds.json'
-local_start = True
+local_start = False
 
 start_telegram = False
 start_clean_data_loader = True

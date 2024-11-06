@@ -23,20 +23,22 @@ class ConfiguratorAnaliser:
         return self.save_path
 
     def get_data_loader(self):
-        # Фильтр
+        # Фильтры
         connection = self.default_config['Подключения']
+        enable_connection = connection.loc[connection['enable'] == True]
+
         timeframe = self.default_config['Таймфреймы']
-        enable_connection = connection.loc[connection['Активно'] == True]
+        timeframe = timeframe.applymap(lambda x: None if pd.isna(x) else x)
 
         config = []
         for i, s in enable_connection.iterrows():
             temp = dict(s)
-            for el in ['Активно', 'id']:
+            for el in ['enable', 'id']:
                 temp.pop(el)
-            enable_timeframe = (timeframe.loc[timeframe['Id подключения'] == s['id']])
-            enable_timeframe.pop('Id подключения')
+            enable_timeframe = (timeframe.loc[timeframe['Id_connection'] == s['id']])
+            enable_timeframe.pop('Id_connection')
             enable_timeframe = enable_timeframe.to_dict('records')
-            temp.update({'Таймфреймы': enable_timeframe})
+            temp.update({'timeframe': enable_timeframe})
             config.append(temp)
         return config
 
