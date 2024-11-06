@@ -28,15 +28,17 @@ class ConfiguratorAnaliser:
         timeframe = self.default_config['Таймфреймы']
         enable_connection = connection.loc[connection['Активно'] == True]
 
+        config = []
         for i, s in enable_connection.iterrows():
             temp = dict(s)
             for el in ['Активно', 'id']:
                 temp.pop(el)
-            temp.update({'timeframe': (timeframe.loc[timeframe['Id подключения'] == s['id']]).to_dict('records')})
-
-            pprint(temp)
-
-        return False
+            enable_timeframe = (timeframe.loc[timeframe['Id подключения'] == s['id']])
+            enable_timeframe.pop('Id подключения')
+            enable_timeframe = enable_timeframe.to_dict('records')
+            temp.update({'Таймфреймы': enable_timeframe})
+            config.append(temp)
+        return config
 
     def get_config(self):
         config = {
