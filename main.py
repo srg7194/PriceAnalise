@@ -1,9 +1,12 @@
 from configurator import Config
 
+from addition.log import logging, CustomLogger, log_decorator
+logger = CustomLogger(level=logging.INFO, name='MAIN')
+
 ### Параметры для запуска
 # Базовые параметры
 creds_path = 'files/secret/creds.json'
-local_start = False
+local_start = True
 
 # Запускаемые модули
 start_telegram = False
@@ -15,4 +18,9 @@ start_trader = False
 
 if __name__ == '__main__':
     # Получение файлов конфигурации
+    logger.log_info('Start')
     config = Config(creds_path, local_start).get_config()
+    logger.log_info('End')
+
+
+# todo - Проблема в логировании, Всегда отражаются одинаковые параметры ('file': 'log', 'string': 91)
