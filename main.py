@@ -15,7 +15,7 @@ start_trader = False
 if __name__ == '__main__':
     # Получение файлов конфигурации
     config_anal = ConfiguratorAnaliser(creds_path, local_start).get_config()
-    pprint.pprint(config_anal)
+    pprint.pprint(config_anal, sort_dicts=False)
 
     # Запуск телеграм бота
     if start_telegram:

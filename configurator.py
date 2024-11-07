@@ -24,11 +24,11 @@ class ConfiguratorAnaliser:
 
     def get_data_loader(self):
         # Фильтры
-        connection = self.default_config['Подключения']
+        connection = self.default_config['connection']
         enable_connection = connection.loc[connection['enable'] == True]
 
-        timeframe = self.default_config['Таймфреймы']
-        timeframe = timeframe.applymap(lambda x: None if pd.isna(x) else x)
+        timeframe = self.default_config['timeframe']
+        timeframe = timeframe.map(lambda x: None if pd.isna(x) else x)
 
         config = []
         for i, s in enable_connection.iterrows():
@@ -45,7 +45,7 @@ class ConfiguratorAnaliser:
     def get_config(self):
         config = {
             'credential': self.creds,
-            'data_loader': self.get_data_loader()
+            'loader': self.get_data_loader()
         }
         return config
 
