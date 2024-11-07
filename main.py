@@ -1,4 +1,4 @@
-from configurator import ConfiguratorAnaliser, ConfiguratorTelegram
+from configurator import Loader, ConfiguratorTelegram
 import pprint
 
 # Параметры для запуска
@@ -14,7 +14,7 @@ start_trader = False
 
 if __name__ == '__main__':
     # Получение файлов конфигурации
-    config_anal = ConfiguratorAnaliser(creds_path, local_start).get_config()
+    config_anal = Loader(creds_path, local_start).get_config()
     pprint.pprint(config_anal, sort_dicts=False)
 
     # Запуск телеграм бота
