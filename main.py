@@ -1,7 +1,7 @@
 from configurator import Config
 
 from addition.log import logging, CustomLogger, log_decorator
-logger = CustomLogger(level=logging.INFO, name='MAIN')
+logger = CustomLogger(level=logging.DEBUG, name='MAIN')
 
 ### Параметры для запуска
 # Базовые параметры
@@ -18,9 +18,10 @@ start_trader = False
 
 if __name__ == '__main__':
     # Получение файлов конфигурации
-    logger.log_info('Start')
+    logger.log_info('Запуск')
+    logger.log_debug('Получение файла конфигурации')
     config = Config(creds_path, local_start).get_config()
-    logger.log_info('End')
+    logger.log_info('Окончание работы')
 
 
 # todo - Проблема в логировании, Всегда отражаются одинаковые параметры ('file': 'log', 'string': 91)
