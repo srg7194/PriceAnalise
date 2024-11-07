@@ -1,17 +1,16 @@
 from configurator import Config
 
-# Параметры для запуска
+### Параметры для запуска
+# Базовые параметры
 creds_path = 'files/secret/creds.json'
 local_start = False
 
+# Запускаемые модули
 start_telegram = False
 start_clean_data_loader = True
 start_pa_analiser = False
 start_order_tester = False
 start_trader = False
-
-
-
 
 
 if __name__ == '__main__':
