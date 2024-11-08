@@ -1,14 +1,23 @@
+import time
+
 from addition.api import *
 from addition.other import *
+from tqdm import tqdm
+
+from addition.log import logging, CustomLogger, log_decorator
+logger = CustomLogger(level=logging.DEBUG, name='CONFIGURATOR')
+logger_loader = CustomLogger(level=logging.DEBUG, name='CONFIGURATOR LOADER')
 
 class Config:
     def __init__(self, creds_path, local_start):
+        logger.log_debug('Создание конфигурации...')
         self.creds_path = creds_path
-        self.save_path_xslx = 'files/config/config.xlsx'
+        self.save_path_xslx = 'files/config/settings.xlsx'
         self.save_path_json = 'files/config/config.json'
         self.creds = json_to_dict(self.creds_path)
 
         if not local_start:
+            logger.log_debug('Скачивание файла настроек')
             self.save_config()
         self.default_config = read_excel_file(self.save_path_xslx)
 
@@ -26,7 +35,9 @@ class Config:
             'credential': self.creds,
             'loader': Loader(self.default_config).get_config()
         }
+        logger.log_debug(f'Сохранение файла конфигурации - {self.save_path_json}')
         dict_to_json(config, self.save_path_json)
+        logger.log_debug('Создание конфигурации завершено')
         return config
 
 
@@ -41,13 +52,14 @@ class Loader:
 
     def update_data(self):
         timeframe = self.default_config['timeframe']
-        timeframe = timeframe.map(lambda x: None if pd.isna(x) else x)
+        timeframe['junior'] = timeframe['junior'].where(~timeframe['junior'].isna(), False)
         return timeframe
 
     @staticmethod
+    @delay()
     def get_data_loader(enable_connection, timeframe):
         config = []
-        for i, s in enable_connection.iterrows():
+        for i, s in tqdm(enable_connection.iterrows(), total=enable_connection.shape[0], desc="Processing connections"):
             temp = dict(s)
             for el in ['enable', 'id']:
                 temp.pop(el)
@@ -59,8 +71,11 @@ class Loader:
         return config
 
     def get_config(self):
+        logger_loader.log_debug('Фильтрация активных настроек')
         enable_connection = self.filter_enabled()
+        logger_loader.log_debug('Модификация значений')
         timeframe = self.update_data()
+        logger_loader.log_debug('Создание файла конфигурации')
         config = self.get_data_loader(enable_connection, timeframe)
         return config
 

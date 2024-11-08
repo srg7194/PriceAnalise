@@ -5,6 +5,20 @@ import os
 import glob
 import shutil
 import pandas as pd
+from functools import wraps
+import time
+
+
+
+def delay(seconds=0.5):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            return func(*args, **kwargs)
+        return wrapper
+    time.sleep(seconds)
+    return decorator
+
 
 
 def df_print(df, count_rows=False):

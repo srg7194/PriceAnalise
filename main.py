@@ -19,9 +19,8 @@ start_trader = False
 if __name__ == '__main__':
     # Получение файлов конфигурации
     logger.log_info('Запуск')
-    logger.log_debug('Получение файла конфигурации')
+
+    logger.log_info('Получение конфигурации')
     config = Config(creds_path, local_start).get_config()
+
     logger.log_info('Окончание работы')
-
-
-# todo - Проблема в логировании, Всегда отражаются одинаковые параметры ('file': 'log', 'string': 91)
