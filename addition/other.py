@@ -6,8 +6,9 @@ import glob
 import shutil
 import pandas as pd
 from functools import wraps
+from tqdm import tqdm
 import time
-
+from colorama import Fore, Style, init
 
 
 def delay(seconds=0.5):
@@ -15,10 +16,35 @@ def delay(seconds=0.5):
         @wraps(func)
         def wrapper(*args, **kwargs):
             return func(*args, **kwargs)
+
         return wrapper
+
     time.sleep(seconds)
     return decorator
 
+
+def get_progress(obj, debug=False, info=False, warning=False, error=False, critical=False):
+    color = "\033[0m"
+    reset_color = "\033[0m"
+    if debug:
+        color = Fore.WHITE
+    elif info:
+        color = Fore.GREEN
+    elif warning:
+        color = Fore.YELLOW
+    elif error:
+        color = Fore.RED
+    elif critical:
+        color = Fore.LIGHTRED_EX
+
+    desc = "Processing connections"
+    bar_format=f"{color}{{l_bar}}{{bar}}{{r_bar}}{reset_color}"
+
+    if type(obj) == pd.DataFrame:
+        obj = tqdm(obj.iterrows(), total=obj.shape[0], desc=desc, bar_format=bar_format)
+    else:
+        obj = tqdm(obj, desc=desc, bar_format=bar_format)
+    return obj
 
 
 def df_print(df, count_rows=False):
@@ -30,6 +56,7 @@ def df_print(df, count_rows=False):
             print(df.head(count_rows).to_markdown(tablefmt="fancy_grid"))
     else:
         print(df.to_markdown(tablefmt="fancy_grid"))
+
 
 def file_exists(file_path):
     """
@@ -43,6 +70,7 @@ def file_exists(file_path):
     """
     return os.path.exists(file_path)
 
+
 def get_files_list(dir_path, file_pattern=False):
     if os.path.exists(dir_path):
         if file_pattern:
@@ -50,6 +78,7 @@ def get_files_list(dir_path, file_pattern=False):
             return glob.glob(file_pattern)
         return os.listdir(dir_path)
     return list()
+
 
 def create_file(file_path):
     """
@@ -68,6 +97,7 @@ def create_file(file_path):
     except Exception as e:
         print(f"Ошибка при создании файла: {e}")
         return False
+
 
 def create_directory(directory_path):
     """
@@ -88,6 +118,7 @@ def create_directory(directory_path):
         print(f"Ошибка при создании директории: {e}")
         return False
 
+
 def delete_file(path, is_folder=False):
     """
     Удаляет файл.
@@ -105,6 +136,7 @@ def delete_file(path, is_folder=False):
         if os.path.exists(path):
             shutil.rmtree(path)
 
+
 def get_file_extension(file_path):
     """
     Получает расширение файла.
@@ -116,6 +148,7 @@ def get_file_extension(file_path):
     - str: Расширение файла.
     """
     return os.path.splitext(file_path)[1]
+
 
 def get_file_size(file_path):
     """
@@ -129,6 +162,7 @@ def get_file_size(file_path):
     """
     return os.path.getsize(file_path)
 
+
 def dict_to_yaml(data, path):
     """
     Метод для преобразования словаря в YAML и записи данных в файл.
@@ -139,6 +173,7 @@ def dict_to_yaml(data, path):
     """
     with open(path, 'w', encoding='utf-8') as o_file:
         yaml.dump(data, o_file, default_flow_style=False, allow_unicode=True)
+
 
 def yaml_to_dict(path):
     """
@@ -153,6 +188,7 @@ def yaml_to_dict(path):
     with open(path, encoding='utf-8') as o_file:
         res = dict(yaml.load(o_file, Loader=SafeLoader))
     return res
+
 
 def read_excel_file(file_path, sheet_names=None, data_to_dict=False):
     """
@@ -178,6 +214,7 @@ def read_excel_file(file_path, sheet_names=None, data_to_dict=False):
         data = reformat_data
     return data
 
+
 def write_excel_file(data_dict, file_path):
     """
     Метод для записи данных в файл Excel.
@@ -189,6 +226,7 @@ def write_excel_file(data_dict, file_path):
     with pd.ExcelWriter(file_path, engine='xlsxwriter') as writer:
         for sheet_name, df in data_dict.items():
             df.to_excel(writer, sheet_name=sheet_name, index=False)
+
 
 def json_to_dict(file_path):
     """
@@ -204,6 +242,7 @@ def json_to_dict(file_path):
         data_dict = json.load(json_file)
     return data_dict
 
+
 def dict_to_json(data_dict, file_path):
     """
     Метод для преобразования словаря в JSON и записи данных в файл.
@@ -214,6 +253,7 @@ def dict_to_json(data_dict, file_path):
     """
     with open(file_path, 'w', encoding='utf-8') as json_file:
         json.dump(data_dict, json_file, indent=2, ensure_ascii=False)
+
 
 def read_binary_file(file_path):
     """
@@ -229,13 +269,14 @@ def read_binary_file(file_path):
         content = binary_file.read()
         return content
 
-def write_binary_file(data, file_path):
-        """
-        Метод для записи бинарных данных в файл.
 
-        Parameters:
-        - data (bytes): Бинарные данные.
-        - file_path (str): Путь к бинарному файлу.
-        """
-        with open(file_path, 'wb') as binary_file:
-            binary_file.write(data)
+def write_binary_file(data, file_path):
+    """
+    Метод для записи бинарных данных в файл.
+
+    Parameters:
+    - data (bytes): Бинарные данные.
+    - file_path (str): Путь к бинарному файлу.
+    """
+    with open(file_path, 'wb') as binary_file:
+        binary_file.write(data)

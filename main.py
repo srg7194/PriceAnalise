@@ -1,3 +1,5 @@
+import colorama
+
 from configurator import Config
 
 from addition.log import logging, CustomLogger, log_decorator

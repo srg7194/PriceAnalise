@@ -59,7 +59,7 @@ class Loader:
     @delay()
     def get_data_loader(enable_connection, timeframe):
         config = []
-        for i, s in tqdm(enable_connection.iterrows(), total=enable_connection.shape[0], desc="Processing connections"):
+        for i, s in get_progress(obj=enable_connection, debug=True):
             temp = dict(s)
             for el in ['enable', 'id']:
                 temp.pop(el)

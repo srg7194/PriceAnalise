@@ -87,7 +87,7 @@ class CustomLogger:
         return msg
 
     def log_debug(self, message, add=False):
-        self.logger.debug(f"{Fore.CYAN}{Style.BRIGHT}{self.add_info_to_msg(message, add)}{Style.RESET_ALL}")
+        self.logger.debug(f"{Fore.WHITE}{Style.BRIGHT}{self.add_info_to_msg(message, add)}{Style.RESET_ALL}")
 
     def log_info(self, message, add=False):
         self.logger.info(f"{Fore.GREEN}{self.add_info_to_msg(message, add)}{Style.RESET_ALL}")
@@ -99,7 +99,7 @@ class CustomLogger:
         self.logger.error(f"{Fore.RED}{Style.BRIGHT}{self.add_info_to_msg(message, add)}{Style.RESET_ALL}")
 
     def log_critical(self, message, add=False):
-        self.logger.critical(f"{Fore.MAGENTA}{Style.BRIGHT}{self.add_info_to_msg(message, add)}{Style.RESET_ALL}")
+        self.logger.critical(f"{Fore.LIGHTRED_EX}{Style.BRIGHT}{self.add_info_to_msg(message, add)}{Style.RESET_ALL}")
 
 
 def log_decorator(logger, good='DEBUG', bad='ERROR', debug=False):
