@@ -59,7 +59,7 @@ class Loader:
     @delay()
     def get_data_loader(enable_connection, timeframe):
         config = []
-        for i, s in get_progress(obj=enable_connection, debug=True):
+        for i, s in get_progress(obj=enable_connection, debug=True, comment='Процесс выполнения'):
             temp = dict(s)
             for el in ['enable', 'id']:
                 temp.pop(el)

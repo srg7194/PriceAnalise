@@ -23,7 +23,7 @@ def delay(seconds=0.5):
     return decorator
 
 
-def get_progress(obj, debug=False, info=False, warning=False, error=False, critical=False):
+def get_progress(obj, comment='Процесс', debug=False, info=False, warning=False, error=False, critical=False):
     color = "\033[0m"
     reset_color = "\033[0m"
     if debug:
@@ -37,13 +37,12 @@ def get_progress(obj, debug=False, info=False, warning=False, error=False, criti
     elif critical:
         color = Fore.LIGHTRED_EX
 
-    desc = "Processing connections"
     bar_format=f"{color}{{l_bar}}{{bar}}{{r_bar}}{reset_color}"
 
     if type(obj) == pd.DataFrame:
-        obj = tqdm(obj.iterrows(), total=obj.shape[0], desc=desc, bar_format=bar_format)
+        obj = tqdm(obj.iterrows(), total=obj.shape[0], desc=comment, bar_format=bar_format)
     else:
-        obj = tqdm(obj, desc=desc, bar_format=bar_format)
+        obj = tqdm(obj, desc=comment, bar_format=bar_format)
     return obj
 
 
